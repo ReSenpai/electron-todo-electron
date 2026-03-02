@@ -1,7 +1,6 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 
 async function importFresh() {
-  // @ts-expect-error — dynamic import for module re-loading between tests
   const mod = await import('./tokenStorage');
   return mod.tokenStorage as {
     getToken: () => Promise<string | null>;
