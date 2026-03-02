@@ -2,9 +2,14 @@
   "name": "electron-todo-electron",
   "version": "1.0.0",
   "description": "Десктоп-приложение для управления TODO-листами и задачами.\r Клиент к API todo-api.",
-  "main": "index.js",
+  "main": "dist-electron/main.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "lint": "eslint . --ext .ts,.tsx",
+    "format": "prettier --write \"src/**/*.{ts,tsx}\" \"electron/**/*.ts\""
   },
   "repository": {
     "type": "git",
@@ -15,5 +20,25 @@
   "bugs": {
     "url": "https://github.com/ReSenpai/electron-todo-electron/issues"
   },
-  "homepage": "https://github.com/ReSenpai/electron-todo-electron#readme"
+  "homepage": "https://github.com/ReSenpai/electron-todo-electron#readme",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@types/react": "^19.2.14",
+    "@types/react-dom": "^19.2.3",
+    "@vitejs/plugin-react": "^5.1.4",
+    "electron": "^40.6.1",
+    "eslint": "^10.0.2",
+    "eslint-config-prettier": "^10.1.8",
+    "globals": "^17.4.0",
+    "prettier": "^3.8.1",
+    "typescript": "^5.9.3",
+    "typescript-eslint": "^8.56.1",
+    "vite": "^7.3.1",
+    "vite-plugin-electron": "^0.29.0",
+    "vitest": "^4.0.18"
+  },
+  "dependencies": {
+    "react": "^19.2.4",
+    "react-dom": "^19.2.4"
+  }
 }
