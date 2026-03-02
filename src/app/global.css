@@ -57,6 +57,13 @@ body,
   align-items: center;
   justify-content: center;
   flex: 1;
+  position: relative;
+}
+
+.auth-theme-toggle {
+  position: absolute;
+  top: 12px;
+  right: 16px;
 }
 
 .auth-card {
@@ -69,6 +76,24 @@ body,
   display: flex;
   flex: 1;
   overflow: hidden;
+}
+
+/* macOS: отступ для "светофора" */
+.app-root--mac .sidebar-header {
+  padding-left: 80px;
+}
+
+.app-root--mac .auth-theme-toggle {
+  top: 12px;
+  right: 16px;
+}
+
+.app-root--mac .content-toolbar {
+  -webkit-app-region: drag;
+}
+
+.app-root--mac .content-toolbar * {
+  -webkit-app-region: no-drag;
 }
 
 .sidebar {

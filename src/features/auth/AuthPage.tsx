@@ -1,6 +1,8 @@
 import { useState } from 'react';
-import { Box, Button, Card, Flex, Heading, Tabs, Text, TextField } from '@radix-ui/themes';
+import { Box, Button, Card, Flex, Heading, IconButton, Tabs, Text, TextField, Tooltip } from '@radix-ui/themes';
+import { SunIcon, MoonIcon } from '@radix-ui/react-icons';
 import { useAppDispatch, useAppSelector } from '../../app/store';
+import { useTheme } from '../../app/ThemeContext';
 import { loginThunk, registerThunk } from './auth.slice';
 
 export function AuthPage() {
@@ -10,6 +12,7 @@ export function AuthPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
+  const { appearance, toggleTheme } = useTheme();
 
   function handleSubmit(mode: 'login' | 'register') {
     if (!email.trim() || !password.trim()) return;
@@ -19,6 +22,13 @@ export function AuthPage() {
 
   return (
     <div className="auth-page">
+      <div className="auth-theme-toggle">
+        <Tooltip content={appearance === 'dark' ? 'Светлая тема' : 'Тёмная тема'}>
+          <IconButton size="2" variant="ghost" color="gray" onClick={toggleTheme}>
+            {appearance === 'dark' ? <SunIcon /> : <MoonIcon />}
+          </IconButton>
+        </Tooltip>
+      </div>
       <Card className="auth-card" size="3">
         <Tabs.Root defaultValue="login" onValueChange={(v) => setActiveTab(v as 'login' | 'register')}>
           <Tabs.List>
