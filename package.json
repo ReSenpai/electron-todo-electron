@@ -45,7 +45,8 @@
   "pnpm": {
     "onlyBuiltDependencies": [
       "electron",
-      "esbuild"
+      "esbuild",
+      "keytar"
     ]
   },
   "build": {
@@ -56,13 +57,20 @@
     },
     "files": [
       "dist/**/*",
-      "dist-electron/**/*"
+      "dist-electron/**/*",
+      "node_modules/keytar/**/*"
+    ],
+    "asar": true,
+    "asarUnpack": [
+      "node_modules/keytar/**/*"
     ],
     "win": {
       "target": [
         {
           "target": "nsis",
-          "arch": ["x64"]
+          "arch": [
+            "x64"
+          ]
         }
       ],
       "icon": "build/icon.png"
@@ -76,14 +84,19 @@
       "target": [
         {
           "target": "dmg",
-          "arch": ["x64", "arm64"]
+          "arch": [
+            "x64",
+            "arm64"
+          ]
         }
       ],
       "icon": "build/icon.png",
       "category": "public.app-category.productivity"
     },
     "linux": {
-      "target": ["AppImage"],
+      "target": [
+        "AppImage"
+      ],
       "icon": "build/icon.png",
       "category": "Office"
     }
@@ -93,6 +106,7 @@
     "@radix-ui/themes": "^3.3.0",
     "@reduxjs/toolkit": "^2.11.2",
     "axios": "^1.13.6",
+    "keytar": "^7.9.0",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "react-redux": "^9.2.0"

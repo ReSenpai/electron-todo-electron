@@ -1,13 +1,16 @@
-let token: string | null = null;
+import keytar from 'keytar';
 
-export function getToken(): string | null {
-  return token;
+const SERVICE = 'todo-desktop';
+const ACCOUNT = 'jwt';
+
+export async function getToken(): Promise<string | null> {
+  return keytar.getPassword(SERVICE, ACCOUNT);
 }
 
-export function setToken(value: string): void {
-  token = value;
+export async function setToken(value: string): Promise<void> {
+  await keytar.setPassword(SERVICE, ACCOUNT, value);
 }
 
-export function removeToken(): void {
-  token = null;
+export async function removeToken(): Promise<void> {
+  await keytar.deletePassword(SERVICE, ACCOUNT);
 }

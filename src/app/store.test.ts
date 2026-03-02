@@ -13,6 +13,7 @@ describe('store', () => {
     expect(store.getState().auth).toEqual({
       token: null,
       isLoading: false,
+      isInitialized: false,
       error: null,
     });
   });
