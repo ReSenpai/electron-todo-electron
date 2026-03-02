@@ -8,11 +8,15 @@ export interface User {
 export interface TodoList {
   id: string;
   title: string;
+  created_at: string | null;
+  updated_at: string | null;
 }
 
 export interface Task {
   id: string;
+  list_id: string;
   title: string;
   status: TaskStatus;
-  listId: string;
+  created_at: string | null;
+  updated_at: string | null;
 }
