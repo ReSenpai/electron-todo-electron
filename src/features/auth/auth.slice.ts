@@ -1,5 +1,6 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import { login, register } from './auth.api';
+import { tokenStorage } from '../../app/tokenStorage';
 
 interface AuthState {
   token: string | null;
@@ -16,27 +17,29 @@ const initialState: AuthState = {
 export const loginThunk = createAsyncThunk(
   'auth/login',
   async ({ email, password }: { email: string; password: string }) => {
-    return await login(email, password);
+    const token = await login(email, password);
+    await tokenStorage.setToken(token);
+    return token;
   },
 );
 
 export const registerThunk = createAsyncThunk(
   'auth/register',
   async ({ email, password }: { email: string; password: string }) => {
-    return await register(email, password);
+    const token = await register(email, password);
+    await tokenStorage.setToken(token);
+    return token;
   },
 );
+
+export const logoutThunk = createAsyncThunk('auth/logout', async () => {
+  await tokenStorage.removeToken();
+});
 
 const authSlice = createSlice({
   name: 'auth',
   initialState,
-  reducers: {
-    logout(state) {
-      state.token = null;
-      state.error = null;
-      state.isLoading = false;
-    },
-  },
+  reducers: {},
   extraReducers: (builder) => {
     // login
     builder.addCase(loginThunk.pending, (state) => {
@@ -65,8 +68,14 @@ const authSlice = createSlice({
       state.isLoading = false;
       state.error = action.error.message ?? 'Registration failed';
     });
+
+    // logout
+    builder.addCase(logoutThunk.fulfilled, (state) => {
+      state.token = null;
+      state.error = null;
+      state.isLoading = false;
+    });
   },
 });
 
-export const { logout } = authSlice.actions;
 export default authSlice.reducer;

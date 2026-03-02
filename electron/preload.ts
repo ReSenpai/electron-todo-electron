@@ -1,6 +1,7 @@
-import { contextBridge } from 'electron';
+import { contextBridge, ipcRenderer } from 'electron';
 
-// Пока пустой bridge — IPC-методы будут добавлены в Фазе 4
 contextBridge.exposeInMainWorld('electronAPI', {
-  // placeholder
+  getToken: (): Promise<string | null> => ipcRenderer.invoke('token:get'),
+  setToken: (token: string): Promise<void> => ipcRenderer.invoke('token:set', token),
+  removeToken: (): Promise<void> => ipcRenderer.invoke('token:remove'),
 });

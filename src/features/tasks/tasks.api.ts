@@ -2,9 +2,9 @@ import { httpClient, toAppError } from '../../api/http';
 import type { Task } from '../../types/models';
 import type { TaskStatus } from '../../types/enums';
 
-interface UpdateTaskPayload {
-  title: string;
-  status: TaskStatus;
+export interface UpdateTaskPayload {
+  title?: string;
+  status?: TaskStatus;
 }
 
 export async function getTasks(listId: string): Promise<Task[]> {

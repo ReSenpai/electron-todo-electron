@@ -1,5 +1,6 @@
-import { app, BrowserWindow } from 'electron';
+import { app, BrowserWindow, ipcMain } from 'electron';
 import path from 'path';
+import * as tokenStore from './tokenStore';
 
 let mainWindow: BrowserWindow | null = null;
 
@@ -26,6 +27,12 @@ function createWindow() {
     mainWindow = null;
   });
 }
+
+/* ── IPC: Token storage ──────────────────────────── */
+
+ipcMain.handle('token:get', () => tokenStore.getToken());
+ipcMain.handle('token:set', (_e, token: string) => tokenStore.setToken(token));
+ipcMain.handle('token:remove', () => tokenStore.removeToken());
 
 app.whenReady().then(createWindow);
 
