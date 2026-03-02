@@ -9,6 +9,7 @@ export function AuthPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [activeTab, setActiveTab] = useState<'login' | 'register'>('login');
 
   function handleSubmit(mode: 'login' | 'register') {
     if (!email.trim() || !password.trim()) return;
@@ -19,7 +20,7 @@ export function AuthPage() {
   return (
     <div className="auth-page">
       <Card className="auth-card" size="3">
-        <Tabs.Root defaultValue="login">
+        <Tabs.Root defaultValue="login" onValueChange={(v) => setActiveTab(v as 'login' | 'register')}>
           <Tabs.List>
             <Tabs.Trigger value="login">Вход</Tabs.Trigger>
             <Tabs.Trigger value="register">Регистрация</Tabs.Trigger>
@@ -44,7 +45,7 @@ export function AuthPage() {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 onKeyDown={(e) => {
-                  if (e.key === 'Enter') handleSubmit('login');
+                  if (e.key === 'Enter') handleSubmit(activeTab);
                 }}
               />
 

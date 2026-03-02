@@ -2,7 +2,11 @@ import axios, { type InternalAxiosRequestConfig } from 'axios';
 import { AppError } from '../types/errors';
 import { tokenStorage } from '../app/tokenStorage';
 
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+// В dev-режиме запросы идут через Vite proxy (/api → реальный сервер),
+// что обходит CORS. В production — напрямую на API.
+const API_BASE_URL = import.meta.env.DEV
+  ? '/api'
+  : import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
 
 export const httpClient = axios.create({
   baseURL: API_BASE_URL,

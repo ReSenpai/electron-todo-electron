@@ -10,6 +10,7 @@ import {
   TextField,
   Tooltip,
 } from '@radix-ui/themes';
+import { TrashIcon, PlusIcon } from '@radix-ui/react-icons';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import {
   fetchTasksThunk,
@@ -53,7 +54,9 @@ export function TasksPanel({ listId, listTitle }: TasksPanelProps) {
   }
 
   function handleStatusChange(taskId: string, status: TaskStatus) {
-    dispatch(updateTaskThunk({ listId, taskId, payload: { status } }));
+    const task = tasks.find((t) => t.id === taskId);
+    if (!task) return;
+    dispatch(updateTaskThunk({ listId, taskId, payload: { title: task.title, status } }));
   }
 
   function handleDelete(taskId: string) {
@@ -104,7 +107,7 @@ export function TasksPanel({ listId, listTitle }: TasksPanelProps) {
 
             <Tooltip content="Удалить">
               <IconButton size="1" variant="ghost" color="red" onClick={() => handleDelete(task.id)}>
-                🗑
+                <TrashIcon />
               </IconButton>
             </Tooltip>
           </div>
@@ -134,7 +137,7 @@ export function TasksPanel({ listId, listTitle }: TasksPanelProps) {
           style={{ flex: 1 }}
         />
         <Button onClick={handleCreate} disabled={!newTitle.trim()}>
-          Добавить
+          <PlusIcon /> Добавить
         </Button>
       </Flex>
     </div>

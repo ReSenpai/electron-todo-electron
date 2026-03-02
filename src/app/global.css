@@ -11,6 +11,43 @@ body,
 #root {
   height: 100%;
   font-family: var(--default-font-family);
+  overflow: hidden;
+}
+
+/* ── App Root ──────────────────────────────────── */
+
+.app-root {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
+
+/* ── Title Bar ─────────────────────────────────── */
+
+.title-bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 36px;
+  min-height: 36px;
+  padding: 0 8px 0 16px;
+  background: var(--gray-2);
+  border-bottom: 1px solid var(--gray-6);
+  user-select: none;
+}
+
+.title-bar-drag {
+  flex: 1;
+  -webkit-app-region: drag;
+  height: 100%;
+}
+
+.title-bar-controls {
+  -webkit-app-region: no-drag;
+}
+
+.title-bar-btn {
+  cursor: pointer !important;
 }
 
 /* ── Auth Page ─────────────────────────────────── */
@@ -19,7 +56,7 @@ body,
   display: flex;
   align-items: center;
   justify-content: center;
-  min-height: 100vh;
+  flex: 1;
 }
 
 .auth-card {
@@ -30,7 +67,8 @@ body,
 
 .main-layout {
   display: flex;
-  height: 100vh;
+  flex: 1;
+  overflow: hidden;
 }
 
 .sidebar {
@@ -80,13 +118,28 @@ body,
   color: var(--accent-11);
 }
 
+/* ── Content Area ──────────────────────────────── */
+
+.content-area {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.content-toolbar {
+  height: 40px;
+  min-height: 40px;
+  border-bottom: 1px solid var(--gray-6);
+}
+
 /* ── Tasks Panel ───────────────────────────────── */
 
 .tasks-panel {
   flex: 1;
   display: flex;
   flex-direction: column;
-  height: 100%;
+  overflow: hidden;
 }
 
 .tasks-header {

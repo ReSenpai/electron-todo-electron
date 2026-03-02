@@ -8,6 +8,8 @@ function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 700,
+    frame: false,
+    titleBarStyle: 'hidden',
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -33,6 +35,18 @@ function createWindow() {
 ipcMain.handle('token:get', () => tokenStore.getToken());
 ipcMain.handle('token:set', (_e, token: string) => tokenStore.setToken(token));
 ipcMain.handle('token:remove', () => tokenStore.removeToken());
+
+/* ── IPC: Window controls ─────────────────────────── */
+
+ipcMain.handle('window:minimize', () => mainWindow?.minimize());
+ipcMain.handle('window:maximize', () => {
+  if (mainWindow?.isMaximized()) {
+    mainWindow.unmaximize();
+  } else {
+    mainWindow?.maximize();
+  }
+});
+ipcMain.handle('window:close', () => mainWindow?.close());
 
 app.whenReady().then(createWindow);
 

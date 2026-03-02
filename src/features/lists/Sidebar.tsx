@@ -9,6 +9,7 @@ import {
   TextField,
   Tooltip,
 } from '@radix-ui/themes';
+import { Pencil1Icon, TrashIcon, PlusIcon } from '@radix-ui/react-icons';
 import { useAppDispatch, useAppSelector } from '../../app/store';
 import {
   fetchListsThunk,
@@ -92,7 +93,7 @@ export function Sidebar({ selectedListId, onSelectList }: SidebarProps) {
                 <Tooltip content="Переименовать">
                   <Dialog.Trigger>
                     <IconButton size="1" variant="ghost">
-                      ✏️
+                      <Pencil1Icon />
                     </IconButton>
                   </Dialog.Trigger>
                 </Tooltip>
@@ -125,7 +126,7 @@ export function Sidebar({ selectedListId, onSelectList }: SidebarProps) {
                 <Tooltip content="Удалить">
                   <AlertDialog.Trigger>
                     <IconButton size="1" variant="ghost" color="red">
-                      🗑
+                      <TrashIcon />
                     </IconButton>
                   </AlertDialog.Trigger>
                 </Tooltip>
@@ -166,7 +167,7 @@ export function Sidebar({ selectedListId, onSelectList }: SidebarProps) {
             style={{ flex: 1 }}
           />
           <Button size="2" onClick={handleCreate} disabled={!newTitle.trim()}>
-            +
+            <PlusIcon />
           </Button>
         </Flex>
       </div>
