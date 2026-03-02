@@ -1,1 +1,5 @@
-// Enum'ы — будет реализован в Фазе 1
+export enum TaskStatus {
+  TODO = 'todo',
+  IN_PROGRESS = 'in_progress',
+  DONE = 'done',
+}
