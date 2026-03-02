@@ -3,7 +3,8 @@ import { httpClient } from '../api/http';
 
 describe('httpClient', () => {
   it('имеет baseURL', () => {
-    expect(httpClient.defaults.baseURL).toBe('http://localhost:3000');
+    expect(httpClient.defaults.baseURL).toBeDefined();
+    expect(httpClient.defaults.baseURL).not.toBe('');
   });
 
   it('имеет Content-Type application/json', () => {

@@ -1,8 +1,10 @@
 import axios from 'axios';
 import { AppError } from '../types/errors';
 
+const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:3000';
+
 export const httpClient = axios.create({
-  baseURL: 'http://localhost:3000',
+  baseURL: API_BASE_URL,
   headers: {
     'Content-Type': 'application/json',
   },
