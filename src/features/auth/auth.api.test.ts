@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { httpClient } from '../../api/http';
-import { login, register } from './auth.api';
+import { login, register, getMe } from './auth.api';
 import { AppError } from '../../types/errors';
 
 vi.mock('../../api/http', async () => {
@@ -9,11 +9,13 @@ vi.mock('../../api/http', async () => {
     ...actual,
     httpClient: {
       post: vi.fn(),
+      get: vi.fn(),
     },
   };
 });
 
 const mockedPost = vi.mocked(httpClient.post);
+const mockedGet = vi.mocked(httpClient.get);
 
 describe('auth.api', () => {
   beforeEach(() => {
@@ -81,6 +83,30 @@ describe('auth.api', () => {
       expect(error).toBeInstanceOf(AppError);
       expect(error.message).toBe('Invalid email format');
       expect(error.statusCode).toBe(422);
+    });
+  });
+
+  describe('getMe', () => {
+    it('возвращает пользователя при валидном токене', async () => {
+      mockedGet.mockResolvedValueOnce({
+        data: { id: 'uuid-1', email: 'user@example.com' },
+      });
+
+      const result = await getMe();
+
+      expect(mockedGet).toHaveBeenCalledWith('/auth/me');
+      expect(result).toEqual({ id: 'uuid-1', email: 'user@example.com' });
+    });
+
+    it('выбрасывает AppError при 401', async () => {
+      mockedGet.mockRejectedValueOnce({
+        response: { status: 401, data: { error: 'Invalid token' } },
+      });
+
+      const error = await getMe().catch((e) => e);
+
+      expect(error).toBeInstanceOf(AppError);
+      expect(error.statusCode).toBe(401);
     });
   });
 });

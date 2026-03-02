@@ -5,6 +5,7 @@ export interface ElectronAPI {
   minimize: () => Promise<void>;
   maximize: () => Promise<void>;
   close: () => Promise<void>;
+  getPlatform: () => Promise<string>;
 }
 
 declare global {

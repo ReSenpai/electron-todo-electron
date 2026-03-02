@@ -4,12 +4,15 @@ import * as tokenStore from './tokenStore';
 
 let mainWindow: BrowserWindow | null = null;
 
+const isMac = process.platform === 'darwin';
+
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1000,
     height: 700,
-    frame: false,
-    titleBarStyle: 'hidden',
+    ...(isMac
+      ? { titleBarStyle: 'hiddenInset', trafficLightPosition: { x: 12, y: 10 } }
+      : { frame: false }),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -47,6 +50,8 @@ ipcMain.handle('window:maximize', () => {
   }
 });
 ipcMain.handle('window:close', () => mainWindow?.close());
+
+ipcMain.handle('platform', () => process.platform);
 
 app.whenReady().then(createWindow);
 

@@ -9,15 +9,17 @@ vi.mock('../../app/tokenStorage', () => ({
   },
 }));
 
-import authReducer, { loginThunk, registerThunk, logoutThunk } from './auth.slice';
+import authReducer, { loginThunk, registerThunk, logoutThunk, restoreSessionThunk } from './auth.slice';
 import * as authApi from './auth.api';
 import { tokenStorage } from '../../app/tokenStorage';
 
 vi.mock('./auth.api');
 const mockedLogin = vi.mocked(authApi.login);
 const mockedRegister = vi.mocked(authApi.register);
+const mockedGetMe = vi.mocked(authApi.getMe);
 const mockedSetToken = vi.mocked(tokenStorage.setToken);
 const mockedRemoveToken = vi.mocked(tokenStorage.removeToken);
+const mockedGetToken = vi.mocked(tokenStorage.getToken);
 
 function createStore() {
   return configureStore({ reducer: { auth: authReducer } });
@@ -33,6 +35,7 @@ describe('auth.slice', () => {
     expect(store.getState().auth).toEqual({
       token: null,
       isLoading: false,
+      isInitialized: false,
       error: null,
     });
   });
@@ -47,6 +50,7 @@ describe('auth.slice', () => {
       expect(store.getState().auth).toEqual({
         token: 'jwt-123',
         isLoading: false,
+        isInitialized: false,
         error: null,
       });
     });
@@ -69,6 +73,7 @@ describe('auth.slice', () => {
       expect(store.getState().auth).toEqual({
         token: null,
         isLoading: false,
+        isInitialized: false,
         error: 'Invalid credentials',
       });
     });
@@ -128,6 +133,7 @@ describe('auth.slice', () => {
       expect(store.getState().auth).toEqual({
         token: null,
         isLoading: false,
+        isInitialized: false,
         error: null,
       });
     });
@@ -137,6 +143,41 @@ describe('auth.slice', () => {
       await store.dispatch(logoutThunk());
 
       expect(mockedRemoveToken).toHaveBeenCalled();
+    });
+  });
+
+  describe('restoreSessionThunk', () => {
+    it('при наличии валидного токена — восстанавливает сессию', async () => {
+      mockedGetToken.mockResolvedValueOnce('saved-jwt');
+      mockedGetMe.mockResolvedValueOnce({ id: 'u1', email: 'a@b.com' });
+
+      const store = createStore();
+      await store.dispatch(restoreSessionThunk());
+
+      expect(store.getState().auth.token).toBe('saved-jwt');
+      expect(store.getState().auth.isInitialized).toBe(true);
+    });
+
+    it('при отсутствии токена — isInitialized=true, token=null', async () => {
+      mockedGetToken.mockResolvedValueOnce(null);
+
+      const store = createStore();
+      await store.dispatch(restoreSessionThunk());
+
+      expect(store.getState().auth.token).toBeNull();
+      expect(store.getState().auth.isInitialized).toBe(true);
+    });
+
+    it('при протухшем токене — удаляет токен, token=null', async () => {
+      mockedGetToken.mockResolvedValueOnce('expired-jwt');
+      mockedGetMe.mockRejectedValueOnce(new Error('Unauthorized'));
+
+      const store = createStore();
+      await store.dispatch(restoreSessionThunk());
+
+      expect(mockedRemoveToken).toHaveBeenCalled();
+      expect(store.getState().auth.token).toBeNull();
+      expect(store.getState().auth.isInitialized).toBe(true);
     });
   });
 });

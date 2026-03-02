@@ -1,10 +1,7 @@
 import { Flex, IconButton, Text } from '@radix-ui/themes';
-import { Cross2Icon, MinusIcon, SquareIcon, SunIcon, MoonIcon } from '@radix-ui/react-icons';
-import { useTheme } from './ThemeContext';
+import { Cross2Icon, MinusIcon, SquareIcon } from '@radix-ui/react-icons';
 
 export function TitleBar() {
-  const { appearance, toggleTheme } = useTheme();
-
   function handleMinimize() {
     window.electronAPI?.minimize?.();
   }
@@ -26,16 +23,6 @@ export function TitleBar() {
       </Flex>
 
       <Flex gap="1" className="title-bar-controls">
-        <IconButton
-          size="1"
-          variant="ghost"
-          color="gray"
-          onClick={toggleTheme}
-          className="title-bar-btn"
-          title={appearance === 'dark' ? 'Светлая тема' : 'Тёмная тема'}
-        >
-          {appearance === 'dark' ? <SunIcon /> : <MoonIcon />}
-        </IconButton>
         <IconButton
           size="1"
           variant="ghost"

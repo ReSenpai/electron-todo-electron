@@ -12,6 +12,13 @@ export default defineConfig(({ mode }) => {
       electron([
         {
           entry: 'electron/main.ts',
+          vite: {
+            build: {
+              rollupOptions: {
+                external: ['keytar'],
+              },
+            },
+          },
         },
         {
           entry: 'electron/preload.ts',

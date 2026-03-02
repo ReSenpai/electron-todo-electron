@@ -1,16 +1,18 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { login, register } from './auth.api';
+import { login, register, getMe } from './auth.api';
 import { tokenStorage } from '../../app/tokenStorage';
 
 interface AuthState {
   token: string | null;
   isLoading: boolean;
+  isInitialized: boolean;
   error: string | null;
 }
 
 const initialState: AuthState = {
   token: null,
   isLoading: false,
+  isInitialized: false,
   error: null,
 };
 
@@ -35,6 +37,23 @@ export const registerThunk = createAsyncThunk(
 export const logoutThunk = createAsyncThunk('auth/logout', async () => {
   await tokenStorage.removeToken();
 });
+
+export const restoreSessionThunk = createAsyncThunk(
+  'auth/restoreSession',
+  async (_, { rejectWithValue }) => {
+    const token = await tokenStorage.getToken();
+    
+    if (!token) return null;
+
+    try {
+      await getMe();
+      return token;
+    } catch {
+      await tokenStorage.removeToken();
+      return rejectWithValue('session_expired');
+    }
+  },
+);
 
 const authSlice = createSlice({
   name: 'auth',
@@ -74,6 +93,19 @@ const authSlice = createSlice({
       state.token = null;
       state.error = null;
       state.isLoading = false;
+    });
+
+    // restoreSession
+    builder.addCase(restoreSessionThunk.pending, (state) => {
+      state.isInitialized = false;
+    });
+    builder.addCase(restoreSessionThunk.fulfilled, (state, action) => {
+      state.token = action.payload;
+      state.isInitialized = true;
+    });
+    builder.addCase(restoreSessionThunk.rejected, (state) => {
+      state.token = null;
+      state.isInitialized = true;
     });
   },
 });
